@@ -2,7 +2,7 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\CategoryResource\Pages;
+use App\Filament\Resources\SubcategoryResource\Pages;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\Subcategory;
@@ -17,11 +17,11 @@ use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
-class CategoryResource extends Resource
+class SubcategoryResource extends Resource
 {
-    protected static ?string $model = Category::class;
+    protected static ?string $model = Subcategory::class;
 
-    protected static ?string $slug = 'categories';
+    protected static ?string $slug = 'subcategories';
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
@@ -31,18 +31,23 @@ class CategoryResource extends Resource
             ->schema([
                 TextInput::make('name')
                     ->required()
-                    ->label('Название категории'),
+                    ->label('Название подкатегории'),
 
-                TextInput::make('catalogName')
+                TextInput::make('nameCatalog')
                     ->required()
-                    ->label('Название категории в каталоге'),
+                    ->label('Название подкатегории в каталоге'),
+
+                Select::make('product_id')
+                    ->relationship('products', 'name')
+                    ->options(Product::query()->pluck('name', 'id'))
+                    ->multiple()
+                    ->label('Товары в категории'),
 
                 Select::make('subcategory_id')
-                    ->required()
-                    ->label('Подкатегории')
-                    ->relationship('subcategories', 'name')
+                    ->relationship('children', 'name')
                     ->options(Subcategory::query()->pluck('name', 'id'))
                     ->multiple()
+                    ->label('Что делаем еще')
             ]);
     }
 
@@ -52,14 +57,17 @@ class CategoryResource extends Resource
             ->columns([
                 TextColumn::make('name')
                     ->searchable()
-                    ->label('Название категории'),
+                    ->label('Название подкатегории'),
 
-                TextColumn::make('catalogName')
-                    ->label('Название категории в каталоге'),
 
-                TextColumn::make('subcategories.name')
-                    ->label('Название подкатегорий в категории'),
+                TextColumn::make('nameCatalog')
+                    ->label('Название подкатегории в каталоге'),
 
+                TextColumn::make('products.name')->label('Товары'),
+
+                TextColumn::make('children.name')->label('Что делаем еще'),
+
+                TextColumn::make('parents.name')->label('Parent')
             ])
             ->filters([
                 //
@@ -78,9 +86,9 @@ class CategoryResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListCategories::route('/'),
-            'create' => Pages\CreateCategory::route('/create'),
-            'edit' => Pages\EditCategory::route('/{record}/edit'),
+            'index' => Pages\ListSubcategories::route('/'),
+            'create' => Pages\CreateSubcategory::route('/create'),
+            'edit' => Pages\EditSubcategory::route('/{record}/edit'),
         ];
     }
 

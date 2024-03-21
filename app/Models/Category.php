@@ -12,24 +12,12 @@ class Category extends Model
     protected $fillable = [
         'name',
         'catalogName',
-//        'product_id',
-//        'parent_id'
-    'alias'
+        'alias'
     ];
 
-    public function products()
+    public function subcategories()
     {
-        return $this->belongsToMany(Product::class, 'category_products');
-    }
-
-    public function parents()
-    {
-        return $this->belongsToMany(Category::class, 'category_parent', 'category_id', 'parent_id');
-    }
-
-    public function children()
-    {
-        return $this->belongsToMany(Category::class, 'category_parent', 'parent_id', 'category_id');
+        return $this->belongsToMany(Subcategory::class, 'subcategory_category');
     }
 
     public function getRouteKeyName()
