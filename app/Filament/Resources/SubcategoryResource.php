@@ -6,6 +6,7 @@ use App\Filament\Resources\SubcategoryResource\Pages;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\Subcategory;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
@@ -47,7 +48,12 @@ class SubcategoryResource extends Resource
                     ->relationship('children', 'name')
                     ->options(Subcategory::query()->pluck('name', 'id'))
                     ->multiple()
-                    ->label('Что делаем еще')
+                    ->label('Что делаем еще'),
+                FileUpload::make('image')
+                    ->label('Картинка на фоне')
+                    ->directory('/media/images/subcategory')
+                    ->visibility('public')
+
             ]);
     }
 

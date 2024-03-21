@@ -11,7 +11,8 @@ class Subcategory extends Model
     protected $fillable = [
         'name',
         'nameCatalog',
-        'alias'
+        'alias',
+        'image'
     ];
 
     public function categories()

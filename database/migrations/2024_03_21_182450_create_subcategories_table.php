@@ -12,6 +12,7 @@ return new class extends Migration {
             $table->string('name');
             $table->string('nameCatalog');
             $table->string('alias');
+            $table->string('image');
         });
     }
 
